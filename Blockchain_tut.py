@@ -6,16 +6,17 @@ import numpy as np
 class Block(object):
 
     def __init__(self, fro, to, amount):
+        self._index = 0
         self.transaction = {
+            "block#" : self._index,
             "timestamp" : str(datetime.datetime.now()),
             "from" : fro,
             "to" : to,
             "amount" : amount
             }
         self._previous_hash = "None"
-        self._index = 0
         self._current_hash = self.calculateHash()
-
+        
     @property
     def previous_hash(self):
         return self._previous_hash
@@ -41,12 +42,14 @@ class Block(object):
         self._index = inc
         
     def __str__(self):
-        return """ block {
-        index: %i
+        return """ block= {
         transaction : %s
         previous_hash: %s
         hash: %s
-        }"""%(self.index, self.transaction, self.previous_hash, self.current_hash )
+        }"""%(self.transaction, self.previous_hash, self.current_hash)
+
+    def __repr__(self):
+        return str(self.transaction)
 
     def calculateHash(self):
         trans =  json.dumps(self.transaction)
@@ -67,8 +70,9 @@ class Blockchain(object):
     def addBlock(self, new_block):
         old_block = self.getLatestBlock()
         new_block.previous_hash = old_block.current_hash
-        new_block.index = old_block.index + 1 
-        self.chain.append(block)
+        new_block.index = (old_block.index + 1)
+        new_block.transaction["block#"] = new_block.index
+        self.chain.append(new_block)
 
     def getLatestBlock(self):
         return self.chain[-1]
