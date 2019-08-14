@@ -26,17 +26,17 @@ class Block(object):
 
     @property
     def current_hash(self):
-        return self.current_hash
+        return self._current_hash
 
     @current_hash.setter
     def current_hash(self, new_hash):
-        self.current_hash = new_hash
+        self._current_hash = new_hash
 
     @property
     def index(self):
-        return self.index
+        return self._index
 
-    @index.property
+    @index.setter
     def index(self, inc):
         self._index = inc
         
@@ -47,7 +47,6 @@ class Block(object):
         previous_hash: %s
         hash: %s
         }"""%(self.index, self.transaction, self.previous_hash, self.current_hash )
-
 
     def calculateHash(self):
         trans =  json.dumps(self.transaction)
@@ -65,10 +64,14 @@ class Blockchain(object):
     def createGenesisBlock(self):
         return Block("None", "None", 0)
 
-    def addBlock(self, old_block, new_block):
+    def addBlock(self, new_block):
+        old_block = self.getLatestBlock()
         new_block.previous_hash = old_block.current_hash
         new_block.index = old_block.index + 1 
         self.chain.append(block)
+
+    def getLatestBlock(self):
+        return self.chain[-1]
 
         
         
