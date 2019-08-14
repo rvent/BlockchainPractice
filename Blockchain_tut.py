@@ -9,10 +9,11 @@ class Block(object):
         self._index = 0
         self.transaction = {
             "block#" : self._index,
-            "timestamp" : str(datetime.datetime.now()),
+            "block_creation_time" : str(datetime.datetime.now()),
             "from" : fro,
             "to" : to,
-            "amount" : amount
+            "amount" : amount,
+            "timestamp" : str(datetime.datetime.now())
             }
         self._previous_hash = "None"
         self._current_hash = self.calculateHash()
@@ -72,6 +73,7 @@ class Blockchain(object):
         new_block.previous_hash = old_block.current_hash
         new_block.index = (old_block.index + 1)
         new_block.transaction["block#"] = new_block.index
+        new_block.transaction["timestamp"] = str(datetime.datetime.now())
         self.chain.append(new_block)
 
     def getLatestBlock(self):
